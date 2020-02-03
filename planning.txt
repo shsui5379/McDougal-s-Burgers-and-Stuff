@@ -30,6 +30,9 @@ transaction simulator
 bill/coin split
 
 Interface:
-
+A column on the left for receipts
+A hr separating receitps
+A column on the right for stats
+A row on bottom for history
 
 Flow:
