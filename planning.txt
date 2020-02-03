@@ -8,7 +8,26 @@ variables for each item's sales
 array to store history arrays
 
 Functions:
-
+random number generator
+display updater
+receipt creater
+total cost calculator
+tax calculator
+change calculator
+meal picker
+subtotal calculator
+payment method determiner
+register balance updater
+customer wallet generator
+time updater
+initialize
+history data packaging
+history data processing
+mean calculator
+coin/bill dropper
+history reset
+transaction simulator
+bill/coin split
 
 Interface:
 
