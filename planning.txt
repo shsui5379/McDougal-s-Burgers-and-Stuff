@@ -1,0 +1,16 @@
+Global variables:
+variables to track remaining coins/bills
+time left
+constants for the cost of different items
+variables to track number of different type of sales
+array for arrays that contain receipts
+variables for each item's sales
+array to store history arrays
+
+Functions:
+
+
+Interface:
+
+
+Flow:
