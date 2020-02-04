@@ -34,5 +34,6 @@ A column on the left for receipts
 A hr separating receitps
 A column on the right for stats
 A row on bottom for history
+Paper like background for receipts
 
 Flow:
