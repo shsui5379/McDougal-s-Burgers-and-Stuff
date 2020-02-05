@@ -32,8 +32,10 @@ bill/coin split
 Interface:
 A column on the left for receipts
 A hr separating receitps
-A column on the right for stats
+A column on the right for stats (sales, payment method, register balance, total sales)
 A row on bottom for history
 Paper like background for receipts
+Receipts contain items ordered, prices, subtotal, tax, total, payment method, payment and change
+Button to start simulation and reset data
 
 Flow:
