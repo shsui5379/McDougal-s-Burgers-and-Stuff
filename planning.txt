@@ -1,11 +1,11 @@
 Global variables:
-array to track remaining coins/bills (registerBalancee)
-time left (time)
-constants for the cost of different items
-variables to track number of different type of sales (cashPay, electronicPay)
-array for arrays that contain receipts (receipts)
-array to track item sales (itemSales)
-array to store history arrays (historyData)
+array to track remaining coins/bills (registerBalance) [done]
+time left (time) [done]
+constants for the cost of different items [done]
+variables to track number of different type of sales (cashPay, electronicPay) [done]
+array for arrays that contain receipts (receipts) [done]
+array to track item sales (itemSales) [done]
+array to store history arrays (historyData) [done]
 
 Functions:
 random number generator (randomNum();)
