@@ -33,11 +33,21 @@
 			<script>
 				function initialize()
 				{
-
+					time = 180; //time left, in minutes
+					receipts = []; //stores receipts
+					registerBalance = [100, 40, 50, 40, 42, 4, 2]; /*balance in the inventory.  
+					format: pennies, nickels, dimes, quarters, 1, 5, 10*/
+					cashPay = [0, 0]; //tracks the amount of sales of each payment method.  format: amount paid, number of transations
+					electronicPay = [0, 0];
+					itemSales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; /*number of sales of each item.  
+					format: hamburger, chicken, veggie, fries, salad, cheese sticks, rice, ice cream, pie, cookie, soda, water, juice*/
+					if (typeof historyData == 'undefined')
+					{
+						historyData = []; //stores stats on history simulations
+					}
 				}
 			</script>
 		</head>
-		<body>
 			<h1>McDougal's Burgers and Stuff</h1>
 			<h2>Simulation</h2>
 			<button onclick = "initialize();">Start</button>
