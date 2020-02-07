@@ -31,6 +31,14 @@
 				}
 			</style>
 			<script>
+				//menu items and costs
+				const ENTREES = [["Hamberger", 1.99], ["Chicken Sandwich", 1.99], ["Veggie Sandwich", 2.29]];
+				const SIDES = [["French Fries", 0.99], ["Salad", 1.39], ["Cheese Sticks", 1.49], ["Rice", 1.19]];
+				const DESSERTS = [["Ice Cream", 1.89], ["Pie", 1.69], ["Cookie", 0.89]];
+				const DRINKS = [["Soda", 1.19], ["Bottled Water", 1.25], ["Juice", 1.69]];
+
+				const VALUES = [0.01, 0.05, 0.1, 0.25, 1, 5, 10]; //values by position in wallet
+
 				function initialize()
 				{
 					time = 180; //time left, in minutes
