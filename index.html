@@ -68,11 +68,23 @@
 						historyData = []; //stores stats on history simulations
 					}
 				}
+				function display()
+				{
+
+				}
+				function reset()
+				{
+					if(confirm("Are you sure you want to reset this data?  This cannot be undone."))
+					{
+						historyData = [];
+						display();
+					}
+				}
 			</script>
 		</head>
 			<h1>McDougal's Burgers and Stuff</h1>
 			<h2>Simulation</h2>
 			<button onclick = "initialize();">Start</button>
-			<button>Reset</button>
+			<button onclick="reset();">Reset</button>
 		</body>
 	</html>
