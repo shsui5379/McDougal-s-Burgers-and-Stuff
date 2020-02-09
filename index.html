@@ -68,6 +68,12 @@
 						historyData = []; //stores stats on history simulations
 					}
 				}
+				function randomNumber(lower, upper)  //random number generator
+                {
+                    var multiplier = upper - lower + 1;
+                    var rnd = (Math.random() * multiplier) + lower;
+                    return rnd;
+                }
 				function display()
 				{
 
