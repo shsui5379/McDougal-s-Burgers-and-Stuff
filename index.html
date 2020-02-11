@@ -69,6 +69,15 @@
 					{
 						historyData = []; //stores stats on history simulations
 					}
+					timeUpdater();
+				}
+				function timeUpdater() { //keeps track of time to determine if another order can be taken
+					time -= randomNumber(1, 7);
+					if (time > 0) {
+						mealPicker();
+					} else {
+						display();
+					}
 				}
 				function randomNumber(lower, upper)  //random number generator
                 {
