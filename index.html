@@ -48,10 +48,12 @@
 			</style>
 			<script>
 				//menu items and costs
-				const ENTREES = [["Hamberger", 1.99], ["Chicken Sandwich", 1.99], ["Veggie Sandwich", 2.29]];
-				const SIDES = [["French Fries", 0.99], ["Salad", 1.39], ["Cheese Sticks", 1.49], ["Rice", 1.19]];
-				const DESSERTS = [["Ice Cream", 1.89], ["Pie", 1.69], ["Cookie", 0.89]];
-				const DRINKS = [["Soda", 1.19], ["Bottled Water", 1.25], ["Juice", 1.69]];
+				const MENU = [
+					[["Hamberger", 1.99], ["Chicken Sandwich", 1.99], ["Veggie Sandwich", 2.29]], //entrees
+					[["French Fries", 0.99], ["Salad", 1.39], ["Cheese Sticks", 1.49], ["Rice", 1.19]], //sides
+					[["Ice Cream", 1.89], ["Pie", 1.69], ["Cookie", 0.89]], //desserts
+					[["Soda", 1.19], ["Bottled Water", 1.25], ["Juice", 1.69]] //drinks
+				];
 
 				const VALUES = [0.01, 0.05, 0.1, 0.25, 1, 5, 10]; //values by position in wallet
 
@@ -79,13 +81,28 @@
 						display();
 					}
 				}
+				function mealPickerOrder() { //pick out the items from the menu to order
+					var toOrder = [];
+					var quantity = mealPickerQuantity();
+					quantity.push(1); //+1 drink
+					var prefix = ["en", "si", "de", "dr"]; //entree, side, dessert, drink prefix for future identification
+					for (var i = 0; i < quantity.length; i++) {
+						for (var e = 0; e != quantity[i]; e++) {
+							toOrder.push(prefix[i]+parseInt(randomNumber(0, MENU[i].length-1)));
+						}
+					}
+					subtotalCalc(toOrder);
+				}
 				function mealPickerQuantity() { //determines how much of each to order
 					var max = [1, 2, 1];
 					var quantity = [];
-					for (var maximum in max) {
+					for (var maximum of max) {
 						quantity.push(parseInt(randomNumber(0, maximum)));
 					}
 					return quantity;
+				}
+				function subtotalCalc(order) {
+					
 				}
 				function randomNumber(lower, upper)  //random number generator
                 {
