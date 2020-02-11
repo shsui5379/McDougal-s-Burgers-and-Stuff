@@ -74,10 +74,18 @@
 				function timeUpdater() { //keeps track of time to determine if another order can be taken
 					time -= randomNumber(1, 7);
 					if (time > 0) {
-						mealPicker();
+						mealPickerOrder();
 					} else {
 						display();
 					}
+				}
+				function mealPickerQuantity() { //determines how much of each to order
+					var max = [1, 2, 1];
+					var quantity = [];
+					for (var maximum in max) {
+						quantity.push(parseInt(randomNumber(0, maximum)));
+					}
+					return quantity;
 				}
 				function randomNumber(lower, upper)  //random number generator
                 {
