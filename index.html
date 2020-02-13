@@ -61,12 +61,12 @@
 				{
 					time = 180; //time left, in minutes
 					receipts = []; //stores receipts
-					registerBalance = [100, 40, 50, 40, 42, 4, 2]; /*balance in the inventory.  
+					registerBalance = [100, 40, 50, 40, 42, 4, 2]; /*balance in the register.  
 					format: pennies, nickels, dimes, quarters, 1, 5, 10*/
 					cashPay = [0, 0]; //tracks the amount of sales of each payment method.  format: amount paid, number of transations
 					electronicPay = [0, 0];
-					itemSales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; /*number of sales of each item.  
-					format: hamburger, chicken, veggie, fries, salad, cheese sticks, rice, ice cream, pie, cookie, soda, water, juice*/
+					itemSales = [[0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0, 0]]; /*number of sales of each item, grouped by type (en, si, de, dr)
+					format: [hamburger, chicken, veggie], [fries, salad, cheese sticks, rice], [ice cream, pie, cookie], [soda, water, juice]*/
 					if (typeof historyData == 'undefined')
 					{
 						historyData = []; //stores stats on history simulations
@@ -85,7 +85,7 @@
 					var toOrder = [];
 					var quantity = mealPickerQuantity();
 					quantity.push(1); //+1 drink
-					var prefix = ["en", "si", "de", "dr"]; //entree, side, dessert, drink prefix for future identification
+					var prefix = ["en", "si", "de", "dr"]; //entree, side, dessert, drink prefix to identify item type on receipt
 					for (var i = 0; i < quantity.length; i++) {
 						for (var e = 0; e != quantity[i]; e++) {
 							toOrder.push(prefix[i]+parseInt(randomNumber(0, MENU[i].length-1)));
@@ -101,8 +101,16 @@
 					}
 					return quantity;
 				}
-				function subtotalCalc(order) {
-					
+				function subtotalCalc(order) { //calculate subtotal given generated order
+					var subtotal = 0;
+					for (var food of order) {
+						var submenu = submenuIdentifier(food);
+						subtotal += MENU[submenu][parseInt(food[2])][1].toFixed(2);
+					}
+					totalCalc(subtotal);
+				}
+				function totalCalc(subtotal) {
+
 				}
 				function randomNumber(lower, upper)  //random number generator
                 {
@@ -110,6 +118,25 @@
                     var rnd = (Math.random() * multiplier) + lower;
                     return rnd;
                 }
+				function submenuIdentifier(item) { //identify which section an item is on the menu
+					var prefix = item.substring(0, 2);
+					var section = 0;
+					switch (true) {
+						case prefix == "en":
+							section = 0;
+							break;
+						case prefix == "si":
+							section = 1;
+							break;
+						case prefix == "de":
+							section = 2;
+							break;
+						case prefix == "dr":
+							section = 3;
+							break;
+					}
+					return section;
+				}
 				function display()
 				{
 
