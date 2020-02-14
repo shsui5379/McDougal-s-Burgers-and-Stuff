@@ -49,13 +49,13 @@
 			<script>
 				//menu items and costs
 				const MENU = [
-					[["Hamberger", 1.99], ["Chicken Sandwich", 1.99], ["Veggie Sandwich", 2.29]], //entrees
-					[["French Fries", 0.99], ["Salad", 1.39], ["Cheese Sticks", 1.49], ["Rice", 1.19]], //sides
-					[["Ice Cream", 1.89], ["Pie", 1.69], ["Cookie", 0.89]], //desserts
-					[["Soda", 1.19], ["Bottled Water", 1.25], ["Juice", 1.69]] //drinks
+					[["Hamberger", 199], ["Chicken Sandwich", 199], ["Veggie Sandwich", 229]], //entrees
+					[["French Fries", 99], ["Salad", 139], ["Cheese Sticks", 149], ["Rice", 119]], //sides
+					[["Ice Cream", 189], ["Pie", 169], ["Cookie", 89]], //desserts
+					[["Soda", 119], ["Bottled Water", 125], ["Juice", 169]] //drinks
 				];
 
-				const VALUES = [0.01, 0.05, 0.1, 0.25, 1, 5, 10]; //values by position in wallet
+				const VALUES = [1, 5, 10, 25, 100, 500, 1000]; //values by position in wallet
 
 				function initialize()
 				{
@@ -105,7 +105,7 @@
 					var subtotal = 0;
 					for (var food of order) {
 						var submenu = submenuIdentifier(food);
-						subtotal += MENU[submenu][parseInt(food[2])][1].toFixed(2);
+						subtotal += MENU[submenu][parseInt(food[2])][1];
 					}
 					totalCalc(subtotal);
 				}
