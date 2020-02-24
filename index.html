@@ -55,14 +55,14 @@
 					[["Soda", 119], ["Bottled Water", 125], ["Juice", 169]] //drinks
 				];
 
-				const VALUES = [1, 5, 10, 25, 100, 500, 1000]; //values by position in wallet
+				const VALUES = [1, 5, 10, 25, 100, 500, 1000, 20000]; //values by position in wallet
 
 				function initialize()
 				{
 					time = 180; //time left, in minutes
 					receipts = []; //stores receipts
-					registerBalance = [100, 40, 50, 40, 42, 4, 2]; /*balance in the register.  
-					format: pennies, nickels, dimes, quarters, 1, 5, 10*/
+					registerBalance = [100, 40, 50, 40, 42, 4, 2, 0]; /*balance in the register.  
+					format: pennies, nickels, dimes, quarters, 1, 5, 10, 20*/
 					cashPay = [0, 0]; //tracks the amount of sales of each payment method.  format: amount paid, number of transations
 					electronicPay = [0, 0];
 					itemSales = [[0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0, 0]]; /*number of sales of each item, grouped by type (en, si, de, dr)
@@ -107,9 +107,116 @@
 						var submenu = submenuIdentifier(food);
 						subtotal += MENU[submenu][parseInt(food[2])][1];
 					}
-					totalCalc(subtotal);
+					paymentMethodChooser(subtotal + taxCalc(subtotal));
 				}
-				function totalCalc(subtotal) {
+				function taxCalc(subtotal) { //returns amount of tax to pay
+					return subtotal * 0.08875;
+				}
+				function paymentMethodChooser(cost) {
+					if (Math.random() <= 0.4) { //40% of cash, 60% of credit
+						cashPayment(cost);
+					} else {
+						creditPayment(cost);
+					}
+				}
+				function cashPayment(cost) { //handles cash payments
+					cashPay[0] += cost;
+					cashPay[1]++;
+					if (Math.random() <= 0.1) { //10% chance of paying exact change
+						billsSplit("e", cost);
+					} else {
+						billsSplit(walletGenerator(), cost);
+					}
+				}
+				function creditPayment(cost) { //handles credit payments
+					electronicPay[0] += cost;
+					electronicPay[1]++;
+				}
+				function walletGenerator() { //generates a wallet for the customer
+					var wallet = [0, 0, 0, 0]; //wallet, in same format as registerBalance
+					var max = [5, 3, 2];
+					for (var i = 0; i < 3; i++) {
+						wallet.push(parseInt(randomNumber(0, max[i])));
+					}
+					wallet.push(1);
+					return wallet;
+				}
+				function billsSplit(wallet, cost) { //determines how a customer uses bills
+					if (wallet == "e") { //exact change
+						if (cost > 500) { //start with fives
+							registerBalance[5]++;
+							cost -= 500;
+						}
+						while (cost > 100) { //singles
+							registerBalance[4]++;
+							cost -= 100;
+						}
+						while (cost > 25) { //quarters
+							registerBalance[3]++;
+							cost -= 25;
+						}
+						while (cost > 10) { //dimes
+							registerBalance[2]++;
+							cost -= 10;
+						}
+						while (cost > 5) { //nickels
+							registerBalance[1]++;
+							cost -= 5;
+						}
+						registerBalance[0] += cost; //pennies
+					} else { //nonexact change
+						for (var i = 0; i < wallet.length; i++) {
+							if (cost - wallet[i]*VALUES[i] > 0) {
+								cost -= wallet[i]*VALUES[i];
+								registerBalance[i] += wallet[i];
+							} else {
+								for (var e = 1; e < wallet[i]; e++) {
+									if (cost - VALUES[i] > 0) {
+										cost -= VALUES[i];
+										registerBalance[i]++;
+									}
+								}
+							}
+						}
+						if (cost != 0) { //giving change
+							for (var a = 0; a < wallet.length; a++) {
+								if (wallet[a] != 0) {
+									a = 100;
+									cost -= VALUES[a];
+									cost *= -1;
+									for (var b of registerBalance) {
+										if (cost - registerBalance[i]*VALUES[i] > 0) {
+										cost -= registerBalance[i]*VALUES[i];
+										registerBalance[i] -= wallet[i];
+									} else {
+										for (var c = 1; c < registerBalance[i]; c++) {
+											if (cost - VALUES[i] > 0) {
+												cost -= VALUES[i];
+												registerBalance[i]--;
+											}
+										}
+									}
+									}
+								}
+							}
+						}
+					}
+					if (cost != 0) { //unable to give all change
+						if (cost > 5) {
+							for (var d = 0; d < wallet.length; d++) {
+								if (wallet[d] != 0) {
+									d = 100;
+									registerBalance[d]--;
+								}
+							}
+						} else {
+							receiptGenerator();
+						}
+					} else {
+						receiptGenerator();
+					}
+				}
+				function receiptGenerator() {
 
 				}
 				function randomNumber(lower, upper)  //random number generator
