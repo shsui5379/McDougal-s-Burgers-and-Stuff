@@ -110,7 +110,7 @@
 					paymentMethodChooser(subtotal + taxCalc(subtotal));
 				}
 				function taxCalc(subtotal) { //returns amount of tax to pay
-					return subtotal * 0.08875;
+					return parseInt(subtotal * 0.08875);
 				}
 				function paymentMethodChooser(cost) {
 					if (Math.random() <= 0.4) { //40% of cash, 60% of credit
@@ -131,6 +131,7 @@
 				function creditPayment(cost) { //handles credit payments
 					electronicPay[0] += cost;
 					electronicPay[1]++;
+					receiptGenerator();
 				}
 				function walletGenerator() { //generates a wallet for the customer
 					var wallet = [0, 0, 0, 0]; //wallet, in same format as registerBalance
@@ -169,34 +170,31 @@
 							if (cost - wallet[i]*VALUES[i] > 0) {
 								cost -= wallet[i]*VALUES[i];
 								registerBalance[i] += wallet[i];
+								wallet[i] = 0;
 							} else {
-								for (var e = 1; e < wallet[i]; e++) {
-									if (cost - VALUES[i] > 0) {
-										cost -= VALUES[i];
-										registerBalance[i]++;
-									}
+								while (cost - VALUES[i] > 0 && wallet[i] != 0) {
+									cost -= VALUES[i];
+									registerBalance[i]++;
+									wallet[i]--;
 								}
 							}
 						}
 						if (cost != 0) { //giving change
 							for (var a = 0; a < wallet.length; a++) {
 								if (wallet[a] != 0) {
-									a = 100;
 									cost -= VALUES[a];
 									cost *= -1;
-									for (var b of registerBalance) {
-										if (cost - registerBalance[i]*VALUES[i] > 0) {
-										cost -= registerBalance[i]*VALUES[i];
-										registerBalance[i] -= wallet[i];
-									} else {
-										for (var c = 1; c < registerBalance[i]; c++) {
-											if (cost - VALUES[i] > 0) {
-												cost -= VALUES[i];
-												registerBalance[i]--;
-											}
+									for (var b = 0; b < registerBalance.length; b++) {
+										if (cost - registerBalance[b]*VALUES[b] > 0) {
+											cost -= registerBalance[b]*VALUES[b];
+											registerBalance[b] = 0;
 										}
 									}
+									while (cost - VALUES[b] > 0 && registerBalance[b] != 0) {
+										cost -= VALUES[b];
+										registerBalance[b]--;
 									}
+									a = 100;
 								}
 							}
 						}
@@ -204,17 +202,14 @@
 					if (cost != 0) { //unable to give all change
 						if (cost > 5) {
 							for (var d = 0; d < wallet.length; d++) {
-								if (wallet[d] != 0) {
-									d = 100;
+								if (registerBalance[d] != 0) {
 									registerBalance[d]--;
+									d = 100;
 								}
 							}
-						} else {
-							receiptGenerator();
 						}
-					} else {
-						receiptGenerator();
 					}
+					receiptGenerator();
 				}
 				function receiptGenerator() {
 
