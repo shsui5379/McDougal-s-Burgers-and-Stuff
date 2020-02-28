@@ -47,6 +47,7 @@
 				}
 			</style>
 			<script>
+				//note: values are in cents, to avoid floating point errors
 				//menu items and costs
 				const MENU = [
 					[["Hamberger", 199], ["Chicken Sandwich", 199], ["Veggie Sandwich", 229]], //entrees
@@ -144,38 +145,50 @@
 				}
 				function billsSplit(wallet, cost) { //determines how a customer uses bills
 					if (wallet == "e") { //exact change
-						if (cost > 500) { //start with fives
+						if (cost >= 2000) { //start with twenties
+							registerBalance[7]++;
+							cost -= 2000;
+						}
+						while (cost >= 1000) { //tens
+							registerBalance[6]++;
+							cost -= 1000;
+						}
+						while (cost >= 500) { //fives
 							registerBalance[5]++;
 							cost -= 500;
 						}
-						while (cost > 100) { //singles
+						while (cost >= 100) { //singles
 							registerBalance[4]++;
 							cost -= 100;
 						}
-						while (cost > 25) { //quarters
+						while (cost >= 25) { //quarters
 							registerBalance[3]++;
 							cost -= 25;
 						}
-						while (cost > 10) { //dimes
+						while (cost >= 10) { //dimes
 							registerBalance[2]++;
 							cost -= 10;
 						}
-						while (cost > 5) { //nickels
+						while (cost >= 5) { //nickels
 							registerBalance[1]++;
 							cost -= 5;
 						}
 						registerBalance[0] += cost; //pennies
 					} else { //nonexact change
-						for (var i = 0; i < wallet.length; i++) {
-							if (cost - wallet[i]*VALUES[i] > 0) {
+						for (var i = 0; i < wallet.length; i++) { //transfer from wallet to register
+							if (cost - wallet[i]*VALUES[i] > 0 && wallet[i] != 0) {
 								cost -= wallet[i]*VALUES[i];
 								registerBalance[i] += wallet[i];
 								wallet[i] = 0;
 							} else {
-								while (cost - VALUES[i] > 0 && wallet[i] != 0) {
-									cost -= VALUES[i];
-									registerBalance[i]++;
-									wallet[i]--;
+								if (cost - VALUES[i] > 0) {
+									while (cost - VALUES[i] > 0 && wallet[i] != 0) {
+										cost -= VALUES[i];
+										registerBalance[i]++;
+										wallet[i]--;
+									}
+								} else {
+									i = undefined;
 								}
 							}
 						}
@@ -185,26 +198,31 @@
 									cost -= VALUES[a];
 									cost *= -1;
 									for (var b = 0; b < registerBalance.length; b++) {
-										if (cost - registerBalance[b]*VALUES[b] > 0) {
+										if (cost - registerBalance[b]*VALUES[b] > 0 && registerBalance != 0) {
 											cost -= registerBalance[b]*VALUES[b];
 											registerBalance[b] = 0;
+										} else {
+											if (cost - VALUES[b] > 0) {
+												while (cost - VALUES[b] > 0 && registerBalance[b] != 0) {
+													cost -= VALUES[b];
+													registerBalance[b]--;
+												}
+											} else {
+												b = undefined;
+											}
 										}
 									}
-									while (cost - VALUES[b] > 0 && registerBalance[b] != 0) {
-										cost -= VALUES[b];
-										registerBalance[b]--;
-									}
-									a = 100;
+									a = undefined;
 								}
 							}
 						}
 					}
 					if (cost != 0) { //unable to give all change
-						if (cost > 5) {
+						if (cost > 5) { //undercharge customer if remaining cost is > 5 cents
 							for (var d = 0; d < wallet.length; d++) {
 								if (registerBalance[d] != 0) {
 									registerBalance[d]--;
-									d = 100;
+									d = undefined;
 								}
 							}
 						}
