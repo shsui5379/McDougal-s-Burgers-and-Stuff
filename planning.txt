@@ -10,20 +10,20 @@ array to store history arrays (historyData) [done]
 Functions:
 random number generator (randomNum();) [done]
 display updater (dislay();)
-total cost calculator (totalCalc();)
-tax calculator
+total cost calculator (totalCalc();) [done]
+tax calculator [done]
 meal picker (mealPicker();) [done]
-subtotal calculator (subtotalCalc();)
-payment method determiner (paymentMethodChooser();)
-customer wallet generator (walletGenerator();)
-time updater (timeUpdater();)
+subtotal calculator (subtotalCalc();) [done]
+payment method determiner (paymentMethodChooser();)[done]
+customer wallet generator (walletGenerator();) [done]
+time updater (timeUpdater();) [done]
 initialize global variables (initialize();) [done]
 history data packaging
 history data processing (historyDataProcessor();)
 mean calculator (mean();)
 coin/bill dropper (billDropper();)
 history reset (reset();) [done]
-transaction simulator (transaction();)
+transaction simulator (transaction();) [done]
 
 Interface:
 A column on the left for receipts
