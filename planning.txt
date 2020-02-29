@@ -47,13 +47,13 @@ Store that generated data into an array as the receipt for that order
 Sum the prices of the food orderd to get subtotal by iterating through the receipt (subtotalCalc();) [done]
 Multiply subtotal by 1.08875 (tax) to find grand total (totalCalc();) [done]
 Random number generator picks a number between 0 and 10, for the probability of paying by cash (40%) or credit (60%) (randomNum();, paymentMethodChooser();) [done]
-If the person pays by credit, add to the electronic payments variables (electronicPay)
+If the person pays by credit, add to the electronic payments variables (electronicPay) [done]
 If the person pays by cash, random number generator picks a number between 0 and 10 for the probability of paying exact change (10%) (randomNum();)
-If change allowed, random number generator picks an integer between 0 and 5 for number of dollar bills, integer between 0 and 3 for number of $5 bills, and an integer between 0 and 2 for number of $10 bills for the customer's wallet, to be stored in an array (walletGenerator();)
-To pay cash with change allowed, customer will start by paying with the lowest denomination it has, and move up from there.  Update variables tracking cashier cash inventory
-Cashier gives change by starting with the lowest denomination and moving up.  
-If the cashier is unable to give change, round up if difference is <0.05.  Else, drop.  Update cashier inventory (transactionSimulator();)
-Update cash payment tracker (cashPay)
+If change allowed, random number generator picks an integer between 0 and 5 for number of dollar bills, integer between 0 and 3 for number of $5 bills, and an integer between 0 and 2 for number of $10 bills for the customer's wallet, to be stored in an array (walletGenerator();) [done]
+To pay cash with change allowed, customer will start by paying with the lowest denomination it has, and move up from there.  Update variables tracking cashier cash inventory [done]
+Cashier gives change by starting with the lowest denomination and moving up.  [done]
+If the cashier is unable to give change, round up if difference is <0.05.  Else, drop.  Update cashier inventory (transactionSimulator();) [done]
+Update cash payment tracker (cashPay) [done]
 Check if the cashier has less than 10 of a coin, exchange 0.5 worth of other coins for 50 pennies, $2 for 40 nickels, $5 for 50 dimes or $10 for 40 quarters (billDropper();)
 Store subtotal, tax, total, payment method, payment and change into the current receipt array
 Push current receipt to receipt holder (receipts)
