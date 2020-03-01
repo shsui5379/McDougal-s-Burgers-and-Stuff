@@ -60,28 +60,45 @@
 
 				function initialize()
 				{
-					time = 180; //time left, in minutes
-					receipts = []; //stores receipts
-					registerBalance = [100, 40, 50, 40, 42, 4, 2, 0]; /*balance in the register.  
+					historyData = []; //stores stats on history simulations
+				}
+				function main() {
+					var registerBalance = [100, 40, 50, 40, 42, 4, 2, 0]; /*balance in the register.  
 					format: pennies, nickels, dimes, quarters, 1, 5, 10, 20*/
-					cashPay = [0, 0]; //tracks the amount of sales of each payment method.  format: amount paid, number of transations
-					electronicPay = [0, 0];
-					itemSales = [[0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0, 0]]; /*number of sales of each item, grouped by type (en, si, de, dr)
+					var cashPay = [0, 0]; //tracks the amount of sales of each payment method.  format: amount paid, number of transations
+					var electronicPay = [0, 0];
+					var itemSales = [[0, 0, 0], [0, 0, 0, 0], [0, 0, 0], [0, 0, 0]]; /*number of sales of each item, grouped by type (en, si, de, dr)
 					format: [hamburger, chicken, veggie], [fries, salad, cheese sticks, rice], [ice cream, pie, cookie], [soda, water, juice]*/
-					if (typeof historyData == 'undefined')
-					{
-						historyData = []; //stores stats on history simulations
+					var time = 180; //time left, in minutes
+					var receipts = []; //stores receipts
+
+					while (time > 0) { //make sure there's time for another customer
+						time -= randomNumber(1, 7);
+						if (time > 0) {
+							var order = mealPickerOrder();
+							var subtotal = subtotalCalc(order);
+							var tax = taxCalc(subtotal);
+							var cost = subtotal + tax;
+							var paymentMethod = Math.random();
+							
+							if (paymentMethod <= 0.4) { //40% of cash, 60% of credit
+								if (Math.random() <= 0.1) { //10% chance of paying exact change
+									var wallet = "e";
+								} else {
+									var wallet = walletGenerator();
+								}
+								var transaction = cashPayment(cost, cashPay, wallet, registerBalance);
+							} else {
+								var transaction = creditPayment(cost, electronicPay);
+							}
+							receipts.push([order, subtotal, tax, paymentMethod, transaction]);
+							billDropper();
+						}
 					}
-					timeUpdater();
+					historyData.push([cashPay, electronicPay, registerBalance, itemSales]);
+					display(receipts, cashPay, electronicPay, registerBalance, itemSales);
 				}
-				function timeUpdater() { //keeps track of time to determine if another order can be taken
-					time -= randomNumber(1, 7);
-					if (time > 0) {
-						mealPickerOrder();
-					} else {
-						display();
-					}
-				}
+				
 				function mealPickerOrder() { //pick out the items from the menu to order
 					var toOrder = [];
 					var quantity = mealPickerQuantity();
@@ -92,7 +109,7 @@
 							toOrder.push(prefix[i]+parseInt(randomNumber(0, MENU[i].length-1)));
 						}
 					}
-					subtotalCalc(toOrder);
+					return toOrder;
 				}
 				function mealPickerQuantity() { //determines how much of each to order
 					var max = [1, 2, 1];
@@ -102,136 +119,122 @@
 					}
 					return quantity;
 				}
+
 				function subtotalCalc(order) { //calculate subtotal given generated order
 					var subtotal = 0;
 					for (var food of order) {
 						var submenu = submenuIdentifier(food);
 						subtotal += MENU[submenu][parseInt(food[2])][1];
 					}
-					paymentMethodChooser(subtotal + taxCalc(subtotal));
+					return subtotal;
 				}
 				function taxCalc(subtotal) { //returns amount of tax to pay
 					return parseInt(subtotal * 0.08875);
 				}
-				function paymentMethodChooser(cost) {
-					if (Math.random() <= 0.4) { //40% of cash, 60% of credit
-						cashPayment(cost);
-					} else {
-						creditPayment(cost);
-					}
+
+				function creditPayment(cost, tracker) { //handles credit payments
+					tracker[0] += cost;
+					tracker[1]++;
 				}
-				function cashPayment(cost) { //handles cash payments
-					cashPay[0] += cost;
-					cashPay[1]++;
-					if (Math.random() <= 0.1) { //10% chance of paying exact change
-						billsSplit("e", cost);
-					} else {
-						billsSplit(walletGenerator(), cost);
-					}
-				}
-				function creditPayment(cost) { //handles credit payments
-					electronicPay[0] += cost;
-					electronicPay[1]++;
-					receiptGenerator();
-				}
-				function walletGenerator() { //generates a wallet for the customer
-					var wallet = [0, 0, 0, 0]; //wallet, in same format as registerBalance
-					var max = [5, 3, 2];
-					for (var i = 0; i < 3; i++) {
-						wallet.push(parseInt(randomNumber(0, max[i])));
-					}
-					wallet.push(1);
-					return wallet;
-				}
-				function billsSplit(wallet, cost) { //determines how a customer uses bills
+				function cashPayment(cost, tracker, wallet, register) { //handles cash payments
+					tracker[0] += cost;
+					tracker[1]++;
 					if (wallet == "e") { //exact change
 						if (cost >= 2000) { //start with twenties
-							registerBalance[7]++;
+							register[7]++;
 							cost -= 2000;
 						}
 						while (cost >= 1000) { //tens
-							registerBalance[6]++;
+							register[6]++;
 							cost -= 1000;
 						}
 						while (cost >= 500) { //fives
-							registerBalance[5]++;
+							register[5]++;
 							cost -= 500;
 						}
 						while (cost >= 100) { //singles
-							registerBalance[4]++;
+							register[4]++;
 							cost -= 100;
 						}
 						while (cost >= 25) { //quarters
-							registerBalance[3]++;
+							register[3]++;
 							cost -= 25;
 						}
 						while (cost >= 10) { //dimes
-							registerBalance[2]++;
+							register[2]++;
 							cost -= 10;
 						}
 						while (cost >= 5) { //nickels
-							registerBalance[1]++;
+							register[1]++;
 							cost -= 5;
 						}
-						registerBalance[0] += cost; //pennies
+						register[0] += cost; //pennies
 					} else { //nonexact change
-						for (var i = 0; i < wallet.length; i++) { //transfer from wallet to register
-							if (cost - wallet[i]*VALUES[i] > 0 && wallet[i] != 0) {
-								cost -= wallet[i]*VALUES[i];
-								registerBalance[i] += wallet[i];
-								wallet[i] = 0;
-							} else {
-								if (cost - VALUES[i] > 0) {
-									while (cost - VALUES[i] > 0 && wallet[i] != 0) {
-										cost -= VALUES[i];
-										registerBalance[i]++;
-										wallet[i]--;
-									}
-								} else {
-									i = undefined;
-								}
-							}
-						}
+						cost = moneyTransfer(wallet, register, cost); //wallet to register
 						if (cost != 0) { //giving change
 							for (var a = 0; a < wallet.length; a++) {
 								if (wallet[a] != 0) {
 									cost -= VALUES[a];
 									cost *= -1;
-									for (var b = 0; b < registerBalance.length; b++) {
-										if (cost - registerBalance[b]*VALUES[b] > 0 && registerBalance != 0) {
-											cost -= registerBalance[b]*VALUES[b];
-											registerBalance[b] = 0;
-										} else {
-											if (cost - VALUES[b] > 0) {
-												while (cost - VALUES[b] > 0 && registerBalance[b] != 0) {
-													cost -= VALUES[b];
-													registerBalance[b]--;
-												}
-											} else {
-												b = undefined;
-											}
-										}
-									}
+									wallet[a]--;
+									register[a]++;
 									a = undefined;
 								}
 							}
+							cost = moneyTransfer(register, wallet, cost); //register to wallet
 						}
 					}
 					if (cost != 0) { //unable to give all change
-						if (cost > 5) { //undercharge customer if remaining cost is > 5 cents
+						if (cost >= 5) { //undercharge customer if remaining change is > 5 cents
 							for (var d = 0; d < wallet.length; d++) {
-								if (registerBalance[d] != 0) {
-									registerBalance[d]--;
+								if (register[d] != 0) {
+									register[d]--;
 									d = undefined;
 								}
 							}
 						}
 					}
-					receiptGenerator();
 				}
-				function receiptGenerator() {
+				function moneyTransfer(origin, destination, cost) {
+					for (var i = 0; i < origin.length; i++) {
+						if (cost - origin[i]*VALUES[i] >= 0 && origin[i] != 0) { //if giving all of the same type of a bill in posession is possible
+							cost -= origin[i]*VALUES[i];
+							destination[i] += origin[i];
+							origin[i] = 0;
+						} else {
+							if (cost - VALUES[i] >= 0) {
+								while (cost - VALUES[i] >= 0 && origin[i] != 0) { //give bills one at a time
+									cost -= VALUES[i];
+									destination[i]++;
+									origin[i]--;
+								}
+							} else {
+								i = undefined;
+							}
+						}
+					}
+					return cost;
+				}
+				function walletGenerator() { //generates a wallet for the customer
+					var wallet = [0, 0, 0, 0]; //wallet, in same format as registerBalance
+					var max = [5, 3, 2];
+					for (var i of max) {
+						wallet.push(parseInt(randomNumber(0, i)));
+					}
+					wallet.push(1); //+20
+					return wallet;
+				}
+				function billDropper() {
 
 				}
+
+				function receiptDecoder() {
+
+				}
+				function historyDecoder() {
+
+				}
+
 				function randomNumber(lower, upper)  //random number generator
                 {
                     var multiplier = upper - lower + 1;
@@ -241,23 +244,23 @@
 				function submenuIdentifier(item) { //identify which section an item is on the menu
 					var prefix = item.substring(0, 2);
 					var section = 0;
-					switch (true) {
-						case prefix == "en":
+					switch (prefix) {
+						case "en":
 							section = 0;
 							break;
-						case prefix == "si":
+						case "si":
 							section = 1;
 							break;
-						case prefix == "de":
+						case "de":
 							section = 2;
 							break;
-						case prefix == "dr":
+						case "dr":
 							section = 3;
 							break;
 					}
 					return section;
 				}
-				function display()
+				function display(receipts, cashSales, electronicSales, register, itemSales)
 				{
 
 				}
@@ -271,9 +274,10 @@
 				}
 			</script>
 		</head>
+		<body onload="initialize();">
 			<h1>McDougal's Burgers and Stuff</h1>
 			<h2>Simulation</h2>
-			<button onclick = "initialize();">Start</button>
+			<button onclick = "main();">Start</button>
 			<button onclick="reset();">Reset</button>
 		</body>
 	</html>
