@@ -135,8 +135,10 @@
 				function creditPayment(cost, tracker) { //handles credit payments
 					tracker[0] += cost;
 					tracker[1]++;
+					return [cost, 0];
 				}
 				function cashPayment(cost, tracker, wallet, register) { //handles cash payments
+					var toPay = cost;
 					tracker[0] += cost;
 					tracker[1]++;
 					if (wallet == "e") { //exact change
@@ -182,6 +184,7 @@
 								}
 							}
 							cost = moneyTransfer(register, wallet, cost); //register to wallet
+							var change = cost;
 						}
 					}
 					if (cost != 0) { //unable to give all change
@@ -194,6 +197,7 @@
 							}
 						}
 					}
+					return [toPay, change];
 				}
 				function moneyTransfer(origin, destination, cost) {
 					for (var i = 0; i < origin.length; i++) {
