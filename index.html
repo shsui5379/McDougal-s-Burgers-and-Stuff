@@ -92,7 +92,7 @@
 								var transaction = creditPayment(cost, electronicPay);
 							}
 							receipts.push([order, subtotal, tax, paymentMethod, transaction]);
-							billDropper();
+							billDropper(registerBalance);
 						}
 					}
 					historyData.push([cashPay, electronicPay, registerBalance, itemSales]);
@@ -224,8 +224,39 @@
 					wallet.push(1); //+20
 					return wallet;
 				}
-				function billDropper() {
-
+				function billDropper(register) {
+					if (register[0] <= 50) { //penny drop
+						internalTransfer(register, 50, 0);
+					}
+					if (register[1] <= 40) { //nickel
+						internalTransfer(register, 200, 1);
+					}
+					if (register[2] <= 50) { //dime
+						internalTransfer(register, 500, 2);
+					}
+					if (register[3] <= 40) { //quarter
+						internalTransfer(register, 1000, 3);
+					}
+				}
+				function internalTransfer(register, amount, target) { //used by billDropper() to transfer money from one denomination to another
+					var backup = [0, 0, 0, 0, 0, 0, 0, 0]; //backup wallet to roll back in case it's not possible to drop bill.  same format as registerBalance
+					var toXfer = amount;
+					for (var i in register) {
+						if (amount - VALUES[i] >= 0 && register[i] != 0 && i > target) {
+							while (amount - VALUES[i] >= 0 && register[i] != 0) {
+								register[i]--;
+								backup[i]++;
+								amount -= VALUES[i];
+							}
+						}
+					}
+					if (amount == 0) {
+						register[target] += toXfer / VALUES[target];
+					} else {
+						for (var i in backup) {
+							register[i] += backup[i];
+						}
+					}
 				}
 
 				function receiptDecoder() {
