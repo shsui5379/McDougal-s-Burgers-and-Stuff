@@ -138,7 +138,8 @@
 					return [cost, 0];
 				}
 				function cashPayment(cost, tracker, wallet, register) { //handles cash payments
-					var toPay = cost;
+					var paid = cost;
+					var change = 0;
 					tracker[0] += cost;
 					tracker[1]++;
 					if (wallet == "e") { //exact change
@@ -183,21 +184,24 @@
 									a = undefined;
 								}
 							}
+							paid += cost;
+							change = cost;
 							cost = moneyTransfer(register, wallet, cost); //register to wallet
-							var change = cost;
 						}
 					}
 					if (cost != 0) { //unable to give all change
+						change -= cost;
 						if (cost >= 5) { //undercharge customer if remaining change is > 5 cents
 							for (var d = 0; d < wallet.length; d++) {
 								if (register[d] != 0) {
 									register[d]--;
+									change += VALUES[d];
 									d = undefined;
 								}
 							}
 						}
 					}
-					return [toPay, change];
+					return [paid, change];
 				}
 				function moneyTransfer(origin, destination, cost) {
 					for (var i = 0; i < origin.length; i++) {
