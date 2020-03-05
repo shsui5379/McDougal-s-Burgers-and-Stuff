@@ -21,7 +21,7 @@ initialize global variables (initialize();) [done]
 history data packaging
 history data processing (historyDataProcessor();)
 mean calculator (mean();)
-coin/bill dropper (billDropper();)
+coin/bill dropper (billDropper();) [done]
 history reset (reset();) [done]
 transaction simulator (transaction();) [done]
 
@@ -40,9 +40,9 @@ Reset time, receipts and cashier inventory (initialize();) [done]
 Random number generator picks a number between 0 and 2 to determine when a customer arrives. (randomNum();) Subtract number from time tracker (time) [done]
 Random number generator picks a number between 1 and 5 to determine how long it took to serve a customer. (randomNum();)  Stubtract number from time tracker (time, timeUpdater();) [done]
 Verify that time is still >0 [done]
-Random number generator picks a integer 0 or 1 to pick number of entrees, integer 0, 1 or 2 to pick number of side dishes, integer 0 or 1 to pick number of dessert (randomNum();, mealPickerQuantity();)
+Random number generator picks a integer 0 or 1 to pick number of entrees, integer 0, 1 or 2 to pick number of side dishes, integer 0 or 1 to pick number of dessert (randomNum();, mealPickerQuantity();) [done]
     +1 drink
-For the number selected above, for entrees, random number generator picks an integer between 1-3 to pick entrees, an integer between 1-4 to pick sides, an integer between 1-3 to pick dessert and an integer between 1-3 to pick drinks (randomNum();, mealPickerOrder();)
+For the number selected above, for entrees, random number generator picks an integer between 1-3 to pick entrees, an integer between 1-4 to pick sides, an integer between 1-3 to pick dessert and an integer between 1-3 to pick drinks (randomNum();, mealPickerOrder();) [done]
 Store that generated data into an array as the receipt for that order
 Sum the prices of the food orderd to get subtotal by iterating through the receipt (subtotalCalc();) [done]
 Multiply subtotal by 1.08875 (tax) to find grand total (totalCalc();) [done]
@@ -54,10 +54,10 @@ To pay cash with change allowed, customer will start by paying with the lowest d
 Cashier gives change by starting with the lowest denomination and moving up.  [done]
 If the cashier is unable to give change, round up if difference is <0.05.  Else, drop.  Update cashier inventory (transactionSimulator();) [done]
 Update cash payment tracker (cashPay) [done]
-Check if the cashier has less than 10 of a coin, exchange 0.5 worth of other coins for 50 pennies, $2 for 40 nickels, $5 for 50 dimes or $10 for 40 quarters (billDropper();)
-Store subtotal, tax, total, payment method, payment and change into the current receipt array
-Push current receipt to receipt holder (receipts)
-Repeat process until time tracker runs out of time
+Check if the cashier has less than 10 of a coin, exchange 0.5 worth of other coins for 50 pennies, $2 for 40 nickels, $5 for 50 dimes or $10 for 40 quarters (billDropper();) [done]
+Store subtotal, tax, total, payment method, payment and change into the current receipt array [done]
+Push current receipt to receipt holder (receipts) [done]
+Repeat process until time tracker runs out of time [done]
 Once time runs out, calculate total sales (length of receipts holder), total cash sales, total electronic sales, register balance, sales for each item by going through receipts (currentDataProcessor();)
     balance is even if amount of money = total cash sales + 100
 Push that info into an array that gets pushed to a history storage array
