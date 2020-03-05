@@ -114,6 +114,7 @@
 								var transaction = creditPayment(cost, electronicPay);
 							}
 							receipts.push([order, subtotal, tax, paymentMethod, transaction]);
+							orderTracking(order, itemSales);
 							billDropper(registerBalance);
 						}
 					}
@@ -307,6 +308,11 @@
 					decoded.push("Amount paid: " + "$" + receipt[4][0]/100);
 					decoded.push("Change: " + "$" + receipt[4][1]/100);
 					return decoded;
+				}
+				function orderTracking(order, tracker) { //tracks how many times something was ordered
+					for (var food of order) {
+						tracker[submenuIdentifier(food)][food[2]]++;
+					}
 				}
 				function historyDecoder() {
 
