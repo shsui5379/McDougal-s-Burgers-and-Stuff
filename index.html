@@ -291,22 +291,22 @@
 				}
 
 				function receiptDecoder(receipt) {
-					var decoded = [];
+					var decoded = "";
 					for (var food of receipt[0]) { //food ordered and their cost
 						var menuEntry = MENU[submenuIdentifier(food)][food[2]];
-						decoded.push(menuEntry[0] + ": " + "$" + menuEntry[1]/100);
+						decoded += menuEntry[0] + ": " + "$" + menuEntry[1]/100 + "</br>";
 					}
-					decoded.push("</br>Subtotal: " + "$" + receipt[1]/100); //payment info
-					decoded.push("Tax: " + "$" + receipt[2]/100);
-					decoded.push("Grand total: " + "$" + parseInt(receipt[1]+receipt[2])/100);
+					decoded += "</br>Subtotal: " + "$" + receipt[1]/100 + "</br>"; //payment info
+					decoded += "Tax: " + "$" + receipt[2]/100 + "</br>";
+					decoded += "Grand total: " + "$" + parseInt(receipt[1]+receipt[2])/100 + "</br>";
 					if (receipt[3] <= 0.4) {
 						var paymentMethod = "cash"
 					} else {
 						var paymentMethod = "credit";
 					}
-					decoded.push("Payment method: " + paymentMethod);
-					decoded.push("Amount paid: " + "$" + receipt[4][0]/100);
-					decoded.push("Change: " + "$" + receipt[4][1]/100);
+					decoded += "Payment method: " + paymentMethod + "</br>";
+					decoded += "Amount paid: " + "$" + receipt[4][0]/100 + "</br>";
+					decoded += "Change: " + "$" + receipt[4][1]/100;
 					return decoded;
 				}
 				function orderTracking(order, tracker) { //tracks how many times something was ordered
@@ -349,9 +349,7 @@
 						var content = receiptDecoder(r);
 						var newReceipt = document.createElement("SPAN");
 						newReceipt.className = "receipt";
-						for (var entry of content) {
-							newReceipt.innerHTML += entry + "</br>";
-						}
+						newReceipt.innerHTML = content;
 						receiptContainer.appendChild(newReceipt);
 					}
 				}
