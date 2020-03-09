@@ -4,7 +4,7 @@
 			<link href="https://fonts.googleapis.com/css?family=Cherry+Cream+Soda&display=swap" rel="stylesheet">
 			<title>McDougal's Burgers and Stuff Simulation</title>
 			<style>
-				h1, h2, h3
+				h1, h2, h3, h4
 				{
 					text-align: center;
 					font-weight: 300;
@@ -23,6 +23,7 @@
 				body
 				{
 					background-color: #FFCA28;
+					font-family: Tw Cen MT;
 				}
 				button
 				{
@@ -67,12 +68,18 @@
 					width: 275px;
 					display: inline-block;
 					background-color: white;
-					font: 18pt Tw Cen MT;
+					font-size: 18pt;
 					box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 					border-radius: 4px;
-					margin: 35px;
+					margin: 31px;
 					padding: 16px;
 					vertical-align: top;
+				}
+				.half h4 {
+					font-size: 25px;
+				}
+				#right {
+					font-size: 20px;
 				}
 			</style>
 			<script>
@@ -91,6 +98,18 @@
 				{
 					historyData = []; //stores stats on history simulations
 					receiptContainer = document.getElementById("left");
+
+					totalSales = document.getElementById("total");
+					totalCashSales = document.getElementById("cash");
+					totalElectronicSales = document.getElementById("electronic");
+					registerBal = document.getElementById("register");
+					itemsSalesDisp = document.getElementById("items");
+
+					totalSalesHistory = document.getElementById("histtotal");
+					totalCashSalesHistory = document.getElementById("histcash");
+					totalElectronicSalesHistory = document.getElementById("histelectronic");
+					registerBalHistory = document.getElementById("histregister");
+					itemsSalesDispHistory = document.getElementById("histitems");
 				}
 				function main() {
 					var registerBalance = [100, 40, 50, 40, 42, 4, 2, 0]; /*balance in the register.  
@@ -297,33 +316,57 @@
 						}
 					}
 				}
-
+				function registerSum(register) { //sums register
+					var total = 0;
+					for (var position in register) {
+						total += register[position]*VALUES[position];
+					}
+					return total;
+				}
+				function itemSalesDecoder(tracker) { //parses array that tracks individual item sales
+					var out = "";
+					for (var sub in tracker) {
+						for (var food in tracker[sub]) {
+							out += MENU[sub][food][0] + ": " + tracker[sub][food] + " ($" + (MENU[sub][food][1]*tracker[sub][food]/100).toFixed(2) + ")</br>";
+							if (food == tracker[sub].length-1) {
+								out += "</br>";
+							} 
+						}
+					}
+					return out;
+				}
+				function arrayAverage(array, position) {
+					var sum = 0;
+					var count = 0;
+					for (var a of array) {
+						for (var i in a[position]) {
+							
+						}
+					}
+				}
 				function receiptDecoder(receipt) {
 					var decoded = "";
 					for (var food of receipt[0]) { //food ordered and their cost
 						var menuEntry = MENU[submenuIdentifier(food)][food[2]];
 						decoded += menuEntry[0] + ": " + "$" + menuEntry[1]/100 + "</br>";
 					}
-					decoded += "</br>Subtotal: " + "$" + receipt[1]/100 + "</br>"; //payment info
-					decoded += "Tax: " + "$" + receipt[2]/100 + "</br>";
-					decoded += "Grand total: " + "$" + parseInt(receipt[1]+receipt[2])/100 + "</br>";
+					decoded += "</br>Subtotal: " + "$" + (receipt[1]/100).toFixed(2) + "</br>"; //payment info
+					decoded += "Tax: " + "$" + (receipt[2]/100).toFixed(2) + "</br>";
+					decoded += "Grand total: " + "$" + (parseInt(receipt[1]+receipt[2])/100).toFixed(2) + "</br>";
 					if (receipt[3] <= 0.4) {
 						var paymentMethod = "cash"
 					} else {
 						var paymentMethod = "credit";
 					}
 					decoded += "Payment method: " + paymentMethod + "</br>";
-					decoded += "Amount paid: " + "$" + receipt[4][0]/100 + "</br>";
-					decoded += "Change: " + "$" + receipt[4][1]/100;
+					decoded += "Amount paid: " + "$" + (receipt[4][0]/100).toFixed(2) + "</br>";
+					decoded += "Change: " + "$" + (receipt[4][1]/100).toFixed(2);
 					return decoded;
 				}
 				function orderTracking(order, tracker) { //tracks how many times something was ordered
 					for (var food of order) {
 						tracker[submenuIdentifier(food)][food[2]]++;
 					}
-				}
-				function historyDecoder() {
-
 				}
 
 				function randomNumber(lower, upper)  //random number generator
@@ -360,6 +403,26 @@
 						newReceipt.innerHTML = content;
 						receiptContainer.appendChild(newReceipt);
 					}
+					//current stats
+					totalSales.innerHTML = parseInt(cashSales[1]+electronicSales[1]) + " sales made, worth $" + parseFloat(cashSales[0]/100+electronicSales[0]/100).toFixed(2);
+					totalCashSales.innerHTML = cashSales[1] + " sales made, worth $" + (cashSales[0]/100).toFixed(2);
+					totalElectronicSales.innerHTML = electronicSales[1] + " sales made, worth $" + (electronicSales[0]/100).toFixed(2);
+					var regTotal = registerSum(register);
+					switch (true) {
+						case regTotal == cashSales[0]+10000:
+							var oue = "even";
+							break;
+						case regTotal < cashSales[0]+10000:
+							var oue = "under";
+							break;
+						case regTotal > cashSales[0]+10000:
+							var oue = "over";
+							break;
+					}
+					registerBal.innerHTML = "$" + (regTotal/100).toFixed(2) + " (" + oue + ")";
+					itemsSalesDisp.innerHTML = itemSalesDecoder(itemSales);
+					//history stats
+
 				}
 				function reset()
 				{
@@ -385,6 +448,34 @@
 				<span class="half" id="right">
 					<h3>Statistics</h3>
 					</br>
+					<h4>Current</h4>
+					</br>
+					Total sales: <span id="total"></span>
+					</br>
+					Cash sales: <span id="cash"></span>
+					</br>
+					Electronic sales: <span id="electronic"></span>
+					</br>
+					Register balance: <span id="register"></span>
+					</br></br>
+					Item sales: 
+					</br>
+					<span id="items"></span>
+					</br></br>
+
+					<h4>History (Averaged)</h4>
+					</br>
+					Total sales: <span id="histtotal"></span>
+					</br>
+					Cash sales: <span id="histcash"></span>
+					</br>
+					Electronic sales: <span id="histelectronic"></span>
+					</br>
+					Register balance: <span id="histregister"></span>
+					</br></br>
+					Item sales: 
+					</br>
+					<span id="histitems"></span>
 				</span>
 			</div>
 		</body>
