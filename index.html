@@ -79,7 +79,7 @@
 					font-size: 25px;
 				}
 				#right {
-					font-size: 20px;
+					font-size: 18pt;
 				}
 			</style>
 			<script>
@@ -327,7 +327,7 @@
 					var out = "";
 					for (var sub in tracker) {
 						for (var food in tracker[sub]) {
-							out += MENU[sub][food][0] + ": " + tracker[sub][food] + " ($" + (MENU[sub][food][1]*tracker[sub][food]/100).toFixed(2) + ")</br>";
+							out += MENU[sub][food][0] + ": " + parseInt(tracker[sub][food]) + " ($" + (MENU[sub][food][1]*parseInt(tracker[sub][food])/100).toFixed(2) + ")</br>";
 							if (food == tracker[sub].length-1) {
 								out += "</br>";
 							} 
@@ -335,14 +335,20 @@
 					}
 					return out;
 				}
-				function arrayAverage(array, position) {
-					var sum = 0;
-					var count = 0;
-					for (var a of array) {
-						for (var i in a[position]) {
-							
+				function arrayAverage(array, position) { //takes the average of the respecive indicies within a nested array
+					var index = 0;
+					var out = [];
+					while (index != array[0][position].length) {
+						var sum = 0;
+						var count = 0;
+						for (var a of array) {
+							sum += a[position][index];
+							count++;
 						}
+						index++;
+						out.push(sum / count);
 					}
+					return out;
 				}
 				function receiptDecoder(receipt) {
 					var decoded = "";
@@ -422,7 +428,47 @@
 					registerBal.innerHTML = "$" + (regTotal/100).toFixed(2) + " (" + oue + ")";
 					itemsSalesDisp.innerHTML = itemSalesDecoder(itemSales);
 					//history stats
-
+					var cashHist = arrayAverage(history, 0);
+					var electronicHist = arrayAverage(history, 1);
+					var regSums = 0;
+					for (var a of history) {
+						regSums += registerSum(a[2]);
+					}
+					var regAvg = regSums / history.length;
+					var subnum = 0;
+					var itemSalesHist = [];
+					while (subnum != history[0][3].length) {
+						var index = 0;
+						var sub = [];
+						while (index != history[0][3][subnum].length) {
+							var sum = 0;
+							var count = 0;
+							for (var a of history) {
+								sum += a[3][subnum][index];
+								count++;
+							}
+							sub.push(sum / count);
+							index++;
+						}
+						subnum++;
+						itemSalesHist.push(sub);
+					}
+					totalSalesHistory.innerHTML = parseInt(cashHist[1]+electronicHist[1]) + " sales made, worth $" + parseFloat(((cashHist[0]+electronicHist[0])/100).toFixed(2));
+					totalCashSalesHistory.innerHTML = parseInt(cashHist[1]) + " sales made, worth $" + (cashHist[0]/100).toFixed(2);
+					totalElectronicSalesHistory.innerHTML = parseInt(electronicHist[1]) + " sales made, worth $" + (electronicHist[0]/100).toFixed(2);
+					switch (true) {
+						case regTotal == cashHist[0]+10000:
+							var oue = "even";
+							break;
+						case regTotal < cashHist[0]+10000:
+							var oue = "under";
+							break;
+						case regTotal > cashHist[0]+10000:
+							var oue = "over";
+							break;
+					}
+					registerBalHistory.innerHTML = "$" + (regAvg/100).toFixed(2) + " (" + oue + ")";
+					itemsSalesDispHistory.innerHTML = itemSalesDecoder(itemSalesHist);
 				}
 				function reset()
 				{
