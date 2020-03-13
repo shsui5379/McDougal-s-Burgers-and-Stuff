@@ -404,6 +404,9 @@
 				}
 				function display(receipts, cashSales, electronicSales, register, itemSales, history)
 				{
+					while (receiptContainer.hasChildNodes()) {
+						receiptContainer.removeChild(receiptContainer.firstChild);
+					}
 					for (var r of receipts) { //receipts
 						var content = receiptDecoder(r);
 						var newReceipt = document.createElement("SPAN");
