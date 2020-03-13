@@ -7,31 +7,35 @@ array for arrays that contain receipts (receipts) [done]
 array to track item sales (itemSales) [done]
 array to store history arrays (historyData) [done]
 
+update: everything but historyData and constants were localized
+
 Functions:
 random number generator (randomNum();) [done]
-display updater (dislay();)
-total cost calculator (totalCalc();) [done]
+display updater (dislay();) [done]
+total cost calculator (totalCalc();)
 tax calculator [done]
 meal picker (mealPicker();) [done]
 subtotal calculator (subtotalCalc();) [done]
-payment method determiner (paymentMethodChooser();)[done]
+payment method determiner (paymentMethodChooser();)
 customer wallet generator (walletGenerator();) [done]
-time updater (timeUpdater();) [done]
+time updater (timeUpdater();) 
 initialize global variables (initialize();) [done]
 history data packaging
 history data processing (historyDataProcessor();)
-mean calculator (mean();)
+mean calculator (mean();) - designed one that averaged the corresponding positions of nested arrays
 coin/bill dropper (billDropper();) [done]
 history reset (reset();) [done]
 transaction simulator (transaction();) [done]
 
+update: added functions that parses arrays for the display and functions that aid in the transfer of money
+
 Interface:
-A column on the left for receipts
+A column on the left for receipts [done]
 A hr separating receipts
-A column on the right for stats (sales, payment method, register balance, total sales)
-A row on bottom for history
-Paper like background for receipts
-Receipts contain items ordered, prices, subtotal, tax, total, payment method, payment and change
+A column on the right for stats (sales, payment method, register balance, total sales) [done]
+A row on bottom for history - merged with right column
+Paper like background for receipts [done]
+Receipts contain items ordered, prices, subtotal, tax, total, payment method, payment and change [done]
 Button to start simulation and reset data [done]
 
 Flow:
@@ -45,7 +49,7 @@ Random number generator picks a integer 0 or 1 to pick number of entrees, intege
 For the number selected above, for entrees, random number generator picks an integer between 1-3 to pick entrees, an integer between 1-4 to pick sides, an integer between 1-3 to pick dessert and an integer between 1-3 to pick drinks (randomNum();, mealPickerOrder();) [done]
 Store that generated data into an array as the receipt for that order
 Sum the prices of the food orderd to get subtotal by iterating through the receipt (subtotalCalc();) [done]
-Multiply subtotal by 1.08875 (tax) to find grand total (totalCalc();) [done]
+Multiply subtotal by 1.08875 (tax) to find grand total (totalCalc();) - calculated tax separatly using 0.08875
 Random number generator picks a number between 0 and 10, for the probability of paying by cash (40%) or credit (60%) (randomNum();, paymentMethodChooser();) [done]
 If the person pays by credit, add to the electronic payments variables (electronicPay) [done]
 If the person pays by cash, random number generator picks a number between 0 and 10 for the probability of paying exact change (10%) (randomNum();)
@@ -58,8 +62,8 @@ Check if the cashier has less than 10 of a coin, exchange 0.5 worth of other coi
 Store subtotal, tax, total, payment method, payment and change into the current receipt array [done]
 Push current receipt to receipt holder (receipts) [done]
 Repeat process until time tracker runs out of time [done]
-Once time runs out, calculate total sales (length of receipts holder), total cash sales, total electronic sales, register balance, sales for each item by going through receipts (currentDataProcessor();)
+Once time runs out, calculate total sales (length of receipts holder), total cash sales, total electronic sales, register balance, sales for each item by going through receipts (currentDataProcessor();) [done]
     balance is even if amount of money = total cash sales + 100
-Push that info into an array that gets pushed to a history storage array
-Update history info by taking average of the corresponding indices (historyDataProcessor();)
-Display receipts by iterating the receipt holder then iterating through the data at respecive indicies (display();)
+Push that info into an array that gets pushed to a history storage array [done]
+Update history info by taking average of the corresponding indices (historyDataProcessor();) [done]
+Display receipts by iterating the receipt holder then iterating through the data at respecive indicies (display();) [done]
