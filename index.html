@@ -224,6 +224,7 @@
 							cost -= 5;
 						}
 						register[0] += cost; //pennies
+						cost = 0;
 					} else { //nonexact change
 						cost = moneyTransfer(wallet, register, cost); //wallet to register
 						if (cost != 0) { //giving change
@@ -404,7 +405,7 @@
 				}
 				function display(receipts, cashSales, electronicSales, register, itemSales, history)
 				{
-					while (receiptContainer.hasChildNodes()) {
+					while (receiptContainer.hasChildNodes()) { //clear old receipts
 						receiptContainer.removeChild(receiptContainer.firstChild);
 					}
 					for (var r of receipts) { //receipts
